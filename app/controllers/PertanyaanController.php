@@ -9,7 +9,7 @@ class PertanyaanController
     // {
     //     session_start();
     //     if (!View::checkAdmin()) {
-    //         header('Location: /sertifikasi-latihan3/login');
+    //         header('Location: /webqual/admin/login');
     //         return;
     //     }
     // }
@@ -63,7 +63,7 @@ class PertanyaanController
 
         if ($errors) {
             $_SESSION['alertError'] = implode('<br>', $errors);
-            header('Location: /sertifikasi-latihan3/pertanyaan/create');
+            header('Location: /webqual/admin/pertanyaan/create');
             return;
         }
 
@@ -80,7 +80,7 @@ class PertanyaanController
             ]);
 
             $_SESSION['alertSuccess'] = 'Berhasil menambahkan pertanyaan!';
-            header('Location: /sertifikasi-latihan3/pertanyaan');
+            header('Location: /webqual/admin/pertanyaan');
             exit();
         } catch (Exception $e) {
             $_SESSION['alertError'] = 'Gagal menambahkan pertanyaan! ' . $e->getMessage();
@@ -96,7 +96,7 @@ class PertanyaanController
         $id = $_GET['id_pertanyaan'] ?? $_GET['id'] ?? null;
         if (!$id) {
             $_SESSION['alertError'] = 'ID pertanyaan tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/pertanyaan');
+            header('Location: /webqual/admin/pertanyaan');
             return;
         }
 
@@ -105,7 +105,7 @@ class PertanyaanController
 
         if (!$pertanyaan) {
             $_SESSION['alertError'] = 'Data pertanyaan tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/pertanyaan');
+            header('Location: /webqual/admin/pertanyaan');
             return;
         }
 
@@ -138,7 +138,7 @@ class PertanyaanController
 
         if ($errors) {
             $_SESSION['alertError'] = implode('<br>', $errors);
-            header('Location: /sertifikasi-latihan3/pertanyaan/edit?id_pertanyaan=' . urlencode($id));
+            header('Location: /webqual/admin/pertanyaan/edit?id_pertanyaan=' . urlencode($id));
             return;
         }
 
@@ -153,7 +153,7 @@ class PertanyaanController
             ], 'id_pertanyaan', $id);
 
             $_SESSION['alertSuccess'] = 'Berhasil memperbarui pertanyaan!';
-            header('Location: /sertifikasi-latihan3/pertanyaan');
+            header('Location: /webqual/admin/pertanyaan');
         } catch (Exception $e) {
             $_SESSION['alertError'] = 'Gagal memperbarui pertanyaan! ' . $e->getMessage();
             echo json_encode(['status' => 'error']);
@@ -168,14 +168,14 @@ class PertanyaanController
         $id = $_GET['id_pertanyaan'] ?? $_GET['id'] ?? null;
         if (!$id) {
             $_SESSION['alertError'] = 'ID pertanyaan tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/pertanyaan');
+            header('Location: /webqual/admin/pertanyaan');
             return;
         }
 
         $pertanyaan = (new Pertanyaan())->getById('id_pertanyaan', $id);
         if (!$pertanyaan) {
             $_SESSION['alertError'] = 'Data pertanyaan tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/pertanyaan');
+            header('Location: /webqual/admin/pertanyaan');
             return;
         }
 

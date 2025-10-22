@@ -35,17 +35,18 @@ class SurveiController
     public function store()
     {
         session_start();
+        // Pastikan zona waktu (opsional)
+        // date_default_timezone_set('Asia/Jakarta');
 
-        $judul   = htmlspecialchars($_POST['judul_survei'] ?? '');
-        $mulai   = $_POST['tanggal_mulai'] ?? '';
-        $selesai = $_POST['tanggal_selesai'] ?? '';
+        $judul   = htmlspecialchars($_POST['judul_survei'] ?? '', ENT_QUOTES, 'UTF-8');
+        $mulai   = $this->normalizeDateTime($_POST['tanggal_mulai'] ?? '');
+        $selesai = $this->normalizeDateTime($_POST['tanggal_selesai'] ?? '');
         $status  = $_POST['status'] ?? 'draf';
         $idSitus = (int)($_POST['id_situs'] ?? 1);
 
-        // Validasi dasar
         $errors = [];
         if ($judul === '') $errors[] = 'Judul survei wajib diisi.';
-        if (!$this->isValidDateTime($mulai)) $errors[] = 'Format tanggal mulai tidak valid (YYYY-MM-DD HH:MM:SS).';
+        if (!$this->isValidDateTime($mulai))   $errors[] = 'Format tanggal mulai tidak valid (YYYY-MM-DD HH:MM:SS).';
         if (!$this->isValidDateTime($selesai)) $errors[] = 'Format tanggal selesai tidak valid (YYYY-MM-DD HH:MM:SS).';
         if (!in_array($status, $this->statusAllowed, true)) $errors[] = 'Status survei tidak valid.';
         if ($this->isValidDateTime($mulai) && $this->isValidDateTime($selesai) && strtotime($mulai) >= strtotime($selesai)) {
@@ -54,25 +55,27 @@ class SurveiController
 
         if ($errors) {
             $_SESSION['alertError'] = implode('<br>', $errors);
-            header('Location: /sertifikasi-latihan3/survei/create');
+            header('Location: /webqual/admin/survei-create');
             return;
         }
 
         try {
+            $now = date('Y-m-d H:i:s');
+
             $survei = new Survei();
             $survei->insert([
                 'id_survei'       => null,
-                'id_situs'        => $idSitus,            // default 1
+                'id_situs'        => $idSitus,
                 'judul_survei'    => $judul,
-                'tanggal_mulai'   => $mulai,
-                'tanggal_selesai' => $selesai,
+                'tanggal_mulai'   => $mulai,    // sudah dinormalisasi: Y-m-d H:i:s
+                'tanggal_selesai' => $selesai,  // sudah dinormalisasi: Y-m-d H:i:s
                 'status'          => $status,
-                'dibuat_pada'     => date('Y-m-d H:i:s'),
-                'diperbarui_pada' => date('Y-m-d H:i:s'),
+                'dibuat_pada'     => $now,
+                'diperbarui_pada' => $now,
             ]);
 
             $_SESSION['alertSuccess'] = 'Berhasil menambahkan survei!';
-            header('Location: /sertifikasi-latihan3/survei');
+            header('Location: /webqual/admin/survei');
             exit();
         } catch (Exception $e) {
             $_SESSION['alertError'] = 'Gagal menambahkan survei!';
@@ -87,14 +90,14 @@ class SurveiController
         $id = $_GET['id_survei'] ?? $_GET['id'] ?? null;
         if (!$id) {
             $_SESSION['alertError'] = 'ID survei tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/survei');
+            header('Location: /webqual/survei');
             return;
         }
 
         $survei = (new Survei())->getById('id_survei', $id);
         if (!$survei) {
             $_SESSION['alertError'] = 'Data survei tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/survei');
+            header('Location: /webqual/survei');
             return;
         }
 
@@ -110,8 +113,8 @@ class SurveiController
 
         $id      = $_POST['id_survei'] ?? $_POST['id'] ?? null;
         $judul   = $_POST['judul_survei'] ?? '';
-        $mulai   = $_POST['tanggal_mulai'] ?? '';
-        $selesai = $_POST['tanggal_selesai'] ?? '';
+        $mulai   = $this->normalizeDateTime($_POST['tanggal_mulai'] ?? '');
+        $selesai = $this->normalizeDateTime($_POST['tanggal_selesai'] ?? '');
         $status  = $_POST['status'] ?? 'draf';
         $idSitus = (int)($_POST['id_situs'] ?? 1);
 
@@ -127,7 +130,7 @@ class SurveiController
 
         if ($errors) {
             $_SESSION['alertError'] = implode('<br>', $errors);
-            header('Location: /sertifikasi-latihan3/survei/edit?id_survei=' . urlencode($id));
+            header('Location: /webqual/admin/survei-edit?id_survei=' . urlencode($id));
             return;
         }
 
@@ -143,7 +146,7 @@ class SurveiController
             ], 'id_survei', $id);
 
             $_SESSION['alertSuccess'] = 'Berhasil memperbarui survei!';
-            header('Location: /sertifikasi-latihan3/survei');
+            header('Location: /webqual/admin/survei');
         } catch (Exception $e) {
             $_SESSION['alertError'] = 'Gagal memperbarui survei!';
             echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
@@ -157,14 +160,14 @@ class SurveiController
         $id = $_GET['id_survei'] ?? $_GET['id'] ?? null;
         if (!$id) {
             $_SESSION['alertError'] = 'ID survei tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/survei');
+            header('Location: /webqual/survei');
             return;
         }
 
         $survei = (new Survei())->getById('id_survei', $id);
         if (!$survei) {
             $_SESSION['alertError'] = 'Data survei tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/survei');
+            header('Location: /webqual/survei');
             return;
         }
 
@@ -193,10 +196,30 @@ class SurveiController
         return;
     }
 
-    /** Util: validasi string datetime "YYYY-MM-DD HH:MM:SS" */
-    private function isValidDateTime(string $dt): bool
+    private function normalizeDateTime(?string $value): string
     {
-        $d = DateTime::createFromFormat('Y-m-d H:i:s', $dt);
-        return $d && $d->format('Y-m-d H:i:s') === $dt;
+        $value = trim((string) $value);
+        if ($value === '') return '';
+
+        // 1) Bentuk HTML5: "YYYY-MM-DDTHH:MM" -> tambahkan detik
+        if (preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/', $value)) {
+            $value = str_replace('T', ' ', $value) . ':00';
+        }
+        // 2) Bentuk HTML5 dengan detik: "YYYY-MM-DDTHH:MM:SS"
+        elseif (preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/', $value)) {
+            $value = str_replace('T', ' ', $value);
+        }
+        // 3) Bentuk tanpa 'T' tapi tanpa detik: "YYYY-MM-DD HH:MM"
+        elseif (preg_match('/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/', $value)) {
+            $value .= ':00';
+        }
+
+        return $value;
+    }
+
+    private function isValidDateTime(string $value, string $format = 'Y-m-d H:i:s'): bool
+    {
+        $dt = DateTime::createFromFormat($format, $value);
+        return $dt && $dt->format($format) === $value;
     }
 }
