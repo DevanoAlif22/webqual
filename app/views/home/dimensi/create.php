@@ -124,7 +124,7 @@
             <h5><i class="bi bi-diagram-project"></i> Form Tambah Dimensi</h5>
         </div>
         <div class="card-body">
-            <form method="POST" action="/sertifikasi-latihan3/dimensi/store">
+            <form method="POST" action="/webqual/admin/dimensi/store">
                 <div class="mb-3">
                     <label class="form-label">Kode Dimensi *</label>
                     <input type="text" name="kode_dimensi" class="form-control" placeholder="contoh: USABILITY" required>
@@ -145,7 +145,7 @@
                     <button type="submit" class="btn btn-gradient">
                         <i class="bi bi-save"></i> Simpan
                     </button>
-                    <a href="/sertifikasi-latihan3/dimensi" class="btn btn-outline-secondary">
+                    <a href="/webqual/admin/dimensi" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Kembali
                     </a>
                 </div>

@@ -371,8 +371,8 @@
         <button class="mobile-menu-toggle" onclick="toggleSidebar()">
             <i class="bi bi-list"></i>
         </button>
-        
-        <a href="/sertifikasi-latihan3/survei" class="topbar-brand">
+
+        <a href="/webqual/admin/survei" class="topbar-brand">
             <i class="bi bi-grid-3x3-gap-fill"></i>
             <span>Dashboard</span>
         </a>
@@ -392,7 +392,7 @@
                 </div>
             </div>
 
-            <a class="btn-logout" href="/sertifikasi-latihan3/logout">
+            <a class="btn-logout" href="/webqual/admin/logout">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Keluar</span>
             </a>
@@ -407,31 +407,31 @@
         <nav class="sidebar-menu">
             <div class="menu-section">
                 <div class="menu-section-title">Menu Utama</div>
-                <a class="menu-item" href="/sertifikasi-latihan3/survei">
+                <a class="menu-item" href="/webqual/admin/survei">
                     <i class="bi bi-calendar-check"></i>
                     <span>Survei</span>
                 </a>
-                <a class="menu-item" href="/sertifikasi-latihan3/dimensi">
+                <a class="menu-item" href="/webqual/admin/dimensi">
                     <i class="bi bi-diagram-3"></i>
                     <span>Dimensi</span>
                 </a>
-                <a class="menu-item" href="/sertifikasi-latihan3/pertanyaan">
+                <a class="menu-item" href="/webqual/admin/pertanyaan">
                     <i class="bi bi-ui-checks-grid"></i>
                     <span>Pertanyaan</span>
                 </a>
-                <a class="menu-item" href="/sertifikasi-latihan3/mapping">
+                <a class="menu-item" href="/webqual/admin/mapping">
                     <i class="bi bi-link-45deg"></i>
                     <span>Mapping Survei</span>
                 </a>
-                <a class="menu-item" href="/sertifikasi-latihan3/responden">
+                <a class="menu-item" href="/webqual/admin/responden">
                     <i class="bi bi-people"></i>
                     <span>Responden</span>
                 </a>
-                <a class="menu-item" href="/sertifikasi-latihan3/jawaban">
+                <a class="menu-item" href="/webqual/admin/jawaban">
                     <i class="bi bi-list-check"></i>
                     <span>Jawaban</span>
                 </a>
-                <a class="menu-item" href="/sertifikasi-latihan3/hasil">
+                <a class="menu-item" href="/webqual/admin/hasil">
                     <i class="bi bi-bar-chart-line"></i>
                     <span>Hasil WQI</span>
                 </a>
@@ -439,11 +439,11 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">Pengaturan</div>
-                <a class="menu-item" href="/sertifikasi-latihan3/pengguna">
+                <a class="menu-item" href="/webqual/admin/pengguna">
                     <i class="bi bi-person-gear"></i>
                     <span>Pengguna</span>
                 </a>
-                <a class="menu-item" href="/sertifikasi-latihan3/situs">
+                <a class="menu-item" href="/webqual/admin/situs">
                     <i class="bi bi-globe2"></i>
                     <span>Situs</span>
                 </a>
@@ -498,11 +498,11 @@
         (function() {
             const menuItems = document.querySelectorAll('.menu-item');
             const currentPath = window.location.pathname.replace(/\/+$/, '').toLowerCase();
-            
+
             menuItems.forEach(item => {
                 const href = item.getAttribute('href');
                 if (!href) return;
-                
+
                 const itemPath = href.replace(/\/+$/, '').toLowerCase();
                 if (currentPath.includes(itemPath) && itemPath !== '/') {
                     item.classList.add('active');
