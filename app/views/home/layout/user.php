@@ -12,7 +12,7 @@
 
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">p
         <div class="container">
             <a class="navbar-brand" href="#">Portal Karir</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -33,7 +33,7 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
     <!-- Konten -->
     <div class="container mt-4 mb-5">
@@ -41,11 +41,11 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3">
+    <!-- <footer class="bg-dark text-white text-center py-3">
         <div class="container">
             <p class="mb-0">&copy; <?= date('Y') ?> Portal Karir. Semua Hak Dilindungi.</p>
         </div>
-    </footer>
+    </footer> -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

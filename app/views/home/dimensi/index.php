@@ -323,7 +323,7 @@
                 </div>
                 <?php unset($_SESSION['alertSuccess']); ?>
             <?php endif; ?>
-            
+
             <?php if (isset($_SESSION['alertError'])): ?>
                 <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
                     <i class="bi bi-exclamation-triangle me-2"></i>
@@ -356,7 +356,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no = 1; foreach ($dimensis as $d): ?>
+                            <?php $no = 1;
+                            foreach ($dimensis as $d): ?>
                                 <tr>
                                     <td>
                                         <span class="dimensi-no"><?= $no++; ?></span>
@@ -369,24 +370,24 @@
                                     </td>
                                     <td>
                                         <div class="dimensi-desc">
-                                            <?= htmlspecialchars(mb_strimwidth($d['deskripsi'] ?? '-', 0, 80, '...')); ?>
+                                            <?= htmlspecialchars(mb_strimwidth($d['keterangan'] ?? '-', 0, 80, '...')); ?>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="action-buttons">
-                                            <a href="/webqual/admin/dimensi-show?id_dimensi=<?= $d['id_dimensi'] ?>" 
-                                               class="btn btn-action btn-view" 
-                                               title="Lihat Detail">
+                                            <a href="/webqual/admin/dimensi-show?id_dimensi=<?= $d['id_dimensi'] ?>"
+                                                class="btn btn-action btn-view"
+                                                title="Lihat Detail">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="/webqual/admin/dimensi-edit?id_dimensi=<?= $d['id_dimensi'] ?>" 
-                                               class="btn btn-action btn-edit"
-                                               title="Edit">
+                                            <a href="/webqual/admin/dimensi-edit?id_dimensi=<?= $d['id_dimensi'] ?>"
+                                                class="btn btn-action btn-edit"
+                                                title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <button onclick="deleteDimensi('<?= (int)$d['id_dimensi'] ?>')" 
-                                                    class="btn btn-action btn-delete"
-                                                    title="Hapus">
+                                            <button onclick="deleteDimensi('<?= (int)$d['id_dimensi'] ?>')"
+                                                class="btn btn-action btn-delete"
+                                                title="Hapus">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
@@ -396,7 +397,7 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="pagination-wrapper">
                     <div class="pagination-info">
                         Menampilkan <strong id="showingStart">1</strong> - <strong id="showingEnd">5</strong> dari <strong id="totalData"><?= count($dimensis); ?></strong> data
@@ -439,14 +440,14 @@
         const tbody = document.querySelector('.table-modern tbody');
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        
+
         // Hide all rows
         allRows.forEach(row => row.style.display = 'none');
-        
+
         // Show only rows for current page
         const pageRows = allRows.slice(start, end);
         pageRows.forEach(row => row.style.display = '');
-        
+
         // Update row numbers
         pageRows.forEach((row, index) => {
             const numberCell = row.querySelector('.dimensi-no');
@@ -454,27 +455,27 @@
                 numberCell.textContent = start + index + 1;
             }
         });
-        
+
         // Update pagination info
         document.getElementById('showingStart').textContent = start + 1;
         document.getElementById('showingEnd').textContent = Math.min(end, allRows.length);
         document.getElementById('totalData').textContent = allRows.length;
-        
+
         // Update buttons
         updatePaginationButtons();
     }
 
     function updatePaginationButtons() {
         const totalPages = Math.ceil(allRows.length / itemsPerPage);
-        
+
         // Update prev/next buttons
         document.getElementById('prevBtn').disabled = currentPage === 1;
         document.getElementById('nextBtn').disabled = currentPage === totalPages;
-        
+
         // Generate page number buttons
         const pageNumbersDiv = document.getElementById('pageNumbers');
         pageNumbersDiv.innerHTML = '';
-        
+
         for (let i = 1; i <= totalPages; i++) {
             const btn = document.createElement('button');
             btn.className = 'pagination-btn page-number-btn' + (i === currentPage ? ' active' : '');
@@ -487,7 +488,7 @@
     function changePage(direction) {
         const totalPages = Math.ceil(allRows.length / itemsPerPage);
         const newPage = currentPage + direction;
-        
+
         if (newPage >= 1 && newPage <= totalPages) {
             showPage(newPage);
         }

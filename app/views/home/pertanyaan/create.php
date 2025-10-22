@@ -145,7 +145,7 @@
             <h5><i class="bi bi-list-check"></i> Form Tambah Pertanyaan</h5>
         </div>
         <div class="card-body">
-            <form method="POST" action="/sertifikasi-latihan3/pertanyaan/store">
+            <form method="POST" action="/webqual/admin/pertanyaan/store">
                 <div class="mb-3">
                     <label class="form-label">Dimensi *</label>
                     <select name="id_dimensi" class="form-control" required>
@@ -178,7 +178,7 @@
                     <button type="submit" class="btn btn-gradient">
                         <i class="bi bi-save"></i> Simpan
                     </button>
-                    <a href="/sertifikasi-latihan3/pertanyaan" class="btn btn-outline-secondary">
+                    <a href="/webqual/admin/pertanyaan" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Kembali
                     </a>
                 </div>

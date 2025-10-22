@@ -124,7 +124,7 @@
             <h5><i class="bi bi-diagram-project"></i> Form Edit Dimensi</h5>
         </div>
         <div class="card-body">
-            <form method="POST" action="/sertifikasi-latihan3/dimensi/update">
+            <form method="POST" action="/webqual/admin/dimensi/update">
                 <input type="hidden" name="id_dimensi" value="<?= (int)$dimensi['id_dimensi']; ?>">
 
                 <div class="mb-3">
@@ -142,14 +142,14 @@
                 <div class="mb-3">
                     <label class="form-label">Deskripsi (opsional)</label>
                     <textarea name="deskripsi" class="form-control" rows="4"
-                        placeholder="Tuliskan deskripsi atau penjelasan dimensi ini..."><?= htmlspecialchars($dimensi['deskripsi'] ?? ''); ?></textarea>
+                        placeholder="Tuliskan deskripsi atau penjelasan dimensi ini..."><?= htmlspecialchars($dimensi['keterangan'] ?? ''); ?></textarea>
                 </div>
 
                 <div class="d-flex gap-2 mt-4">
                     <button type="submit" class="btn btn-gradient">
                         <i class="bi bi-save"></i> Update
                     </button>
-                    <a href="/sertifikasi-latihan3/dimensi" class="btn btn-outline-secondary">
+                    <a href="/webqual/admin/dimensi" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Kembali
                     </a>
                 </div>

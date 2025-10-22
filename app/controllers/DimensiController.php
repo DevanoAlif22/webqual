@@ -43,7 +43,7 @@ class DimensiController
 
         if ($errors) {
             $_SESSION['alertError'] = implode('<br>', $errors);
-            header('Location: /sertifikasi-latihan3/dimensi/create');
+            header('Location: /webqual/admin/dimensi/create');
             return;
         }
 
@@ -53,18 +53,16 @@ class DimensiController
                 'id_dimensi'     => null,
                 'kode_dimensi'   => htmlspecialchars($kode_dimensi),
                 'nama_dimensi'   => htmlspecialchars($nama_dimensi),
-                'deskripsi'      => $deskripsi, // boleh kosong
-                'dibuat_pada'    => date('Y-m-d H:i:s'),
-                'diperbarui_pada' => date('Y-m-d H:i:s'),
+                'keterangan'      => $deskripsi, // boleh kosong
             ]);
 
             $_SESSION['alertSuccess'] = 'Berhasil menambahkan dimensi!';
-            header('Location: /sertifikasi-latihan3/dimensi');
+            header('Location: /webqual/admin/dimensi');
             exit();
         } catch (Exception $e) {
             // biasanya kena UNIQUE (kode_dimensi)
             $_SESSION['alertError'] = 'Gagal menambahkan dimensi! ' . $e->getMessage();
-            echo json_encode(['status' => 'error']);
+            echo json_encode(['status' => $e->getMessage()]);
             return;
         }
     }
@@ -75,14 +73,14 @@ class DimensiController
         $id = $_GET['id_dimensi'] ?? $_GET['id'] ?? null;
         if (!$id) {
             $_SESSION['alertError'] = 'ID dimensi tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/dimensi');
+            header('Location: /webqual/admin/dimensi');
             return;
         }
 
         $dimensi = (new Dimensi())->getById('id_dimensi', $id);
         if (!$dimensi) {
             $_SESSION['alertError'] = 'Data dimensi tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/dimensi');
+            header('Location: /webqual/admin/dimensi');
             return;
         }
 
@@ -107,7 +105,7 @@ class DimensiController
 
         if ($errors) {
             $_SESSION['alertError'] = implode('<br>', $errors);
-            header('Location: /sertifikasi-latihan3/dimensi/edit?id_dimensi=' . urlencode($id));
+            header('Location: /webqual/admin/dimensi/edit?id_dimensi=' . urlencode($id));
             return;
         }
 
@@ -116,12 +114,11 @@ class DimensiController
             $dimensi->update([
                 'kode_dimensi'   => htmlspecialchars($kode_dimensi),
                 'nama_dimensi'   => htmlspecialchars($nama_dimensi),
-                'deskripsi'      => $deskripsi,
-                'diperbarui_pada' => date('Y-m-d H:i:s'),
+                'keterangan'      => $deskripsi,
             ], 'id_dimensi', $id);
 
             $_SESSION['alertSuccess'] = 'Berhasil memperbarui dimensi!';
-            header('Location: /sertifikasi-latihan3/dimensi');
+            header('Location: /webqual/admin/dimensi');
         } catch (Exception $e) {
             $_SESSION['alertError'] = 'Gagal memperbarui dimensi! ' . $e->getMessage();
             echo json_encode(['status' => 'error']);
@@ -135,14 +132,14 @@ class DimensiController
         $id = $_GET['id_dimensi'] ?? $_GET['id'] ?? null;
         if (!$id) {
             $_SESSION['alertError'] = 'ID dimensi tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/dimensi');
+            header('Location: /webqual/admin/dimensi');
             return;
         }
 
         $dimensi = (new Dimensi())->getById('id_dimensi', $id);
         if (!$dimensi) {
             $_SESSION['alertError'] = 'Data dimensi tidak ditemukan.';
-            header('Location: /sertifikasi-latihan3/dimensi');
+            header('Location: /webqual/admin/dimensi');
             return;
         }
 

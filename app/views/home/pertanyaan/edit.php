@@ -145,7 +145,7 @@
             <h5><i class="bi bi-question-circle"></i> Form Edit Pertanyaan</h5>
         </div>
         <div class="card-body">
-            <form method="POST" action="/sertifikasi-latihan3/pertanyaan/update">
+            <form method="POST" action="/webqual/admin/pertanyaan/update">
                 <input type="hidden" name="id_pertanyaan" value="<?= (int)$pertanyaan['id_pertanyaan']; ?>">
 
                 <div class="mb-3">
@@ -181,7 +181,7 @@
                     <button type="submit" class="btn btn-gradient">
                         <i class="bi bi-save"></i> Update
                     </button>
-                    <a href="/sertifikasi-latihan3/pertanyaan" class="btn btn-outline-secondary">
+                    <a href="/webqual/admin/pertanyaan" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Kembali
                     </a>
                 </div>

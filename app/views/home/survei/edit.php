@@ -140,7 +140,7 @@ $fmt = function ($dt) {
             <h5><i class="bi bi-calendar-check"></i> Form Edit Survei</h5>
         </div>
         <div class="card-body">
-            <form method="POST" action="/sertifikasi-latihan3/survei/update">
+            <form method="POST" action="/webqual/admin/survei/update">
                 <input type="hidden" name="id_survei" value="<?= (int)$survei['id_survei']; ?>">
 
                 <div class="mb-3">
@@ -180,7 +180,7 @@ $fmt = function ($dt) {
                     <button type="submit" class="btn btn-gradient">
                         <i class="bi bi-save"></i> Update
                     </button>
-                    <a href="/sertifikasi-latihan3/survei" class="btn btn-outline-secondary">
+                    <a href="/webqual/admin/survei" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Kembali
                     </a>
                 </div>
