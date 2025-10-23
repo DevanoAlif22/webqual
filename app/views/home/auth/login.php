@@ -1,86 +1,198 @@
-<style>
-    body {
-        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: "Poppins", sans-serif;
-    }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Tiket Bus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .card {
-        border-radius: 15px;
-        overflow: hidden;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    .card-body {
-        background: #ffffff;
-        border-radius: 15px;
-    }
+        .row {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
 
-    h4.text-primary {
-        color: #0d6efd !important;
-        letter-spacing: 0.5px;
-    }
+        .card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            animation: fadeInUp 0.6s ease;
+        }
 
-    .form-control {
-        border-radius: 10px;
-        padding: 10px 14px;
-        border: 1px solid #d0d7de;
-        transition: all 0.3s ease;
-    }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .form-control:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
-    }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px 30px;
+            border: none;
+        }
 
-    .btn-primary {
-        background: linear-gradient(135deg, #0d6efd, #0256c4);
-        border: none;
-        border-radius: 10px;
-        padding: 10px;
-        font-weight: 600;
-        transition: 0.3s ease;
-    }
+        .card-header h4 {
+            font-weight: 600;
+            font-size: 28px;
+            margin-bottom: 0;
+            letter-spacing: 0.5px;
+        }
 
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #0256c4, #003a91);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(2, 86, 196, 0.25);
-    }
+        .card-body {
+            padding: 40px 35px;
+        }
 
-    .alert {
-        border-radius: 10px;
-        font-size: 0.9rem;
-    }
-</style>
+        .form-label {
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
 
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-4">
-                <h4 class="fw-bold text-center mb-4 text-primary">Login Admin</h4>
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
 
-                <?php if (isset($_SESSION['alertError'])): ?>
-                    <div class="alert alert-danger">
-                        <?= htmlspecialchars($_SESSION['alertError']); ?>
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #cbd5e0;
+        }
+
+        .mb-3 {
+            margin-bottom: 24px !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            margin-top: 20px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-danger {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .card-header {
+                padding: 30px 20px 20px;
+            }
+
+            .card-header h4 {
+                font-size: 24px;
+            }
+
+            .card-body {
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header text-center">
+                        <h4>Login Admin</h4>
+                        <!-- PHP Session Alert -->
+                        <!-- Uncomment untuk testing -->
+                        <!--
+                        <div class="alert alert-danger text-center">
+                            Username atau password salah!
+                        </div>
+                        -->
                     </div>
-                    <?php unset($_SESSION['alertError']); ?>
-                <?php endif; ?>
-
-                <form method="POST" action="" novalidate>
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <input type="text" name="username" class="form-control" required autofocus>
+                    <div class="card-body">
+                        <form method="POST" action="" novalidate>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan username" required autofocus>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan password" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary w-100">Masuk</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Masuk</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
