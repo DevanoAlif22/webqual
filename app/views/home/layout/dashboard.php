@@ -384,7 +384,7 @@
                 </div>
             </div>
 
-            <a class="btn-logout" href="/webqual/admin/logout">
+            <a class="btn-logout" href="/webqual/logout">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Keluar</span>
             </a>
