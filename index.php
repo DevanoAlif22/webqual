@@ -6,7 +6,6 @@ require_once 'app/Core/Router.php';
 require_once 'app/models/BaseModel.php';
 require_once 'app/models/User.php';
 
-require_once 'app/controllers/HomeController.php';
 require_once 'app/controllers/SurveiController.php';
 require_once 'app/controllers/SurveiFormController.php';
 require_once 'app/controllers/DimensiController.php';
@@ -49,6 +48,7 @@ Router::add_post('/admin/dimensi/delete', DimensiController::class, 'delete');
 // responden
 Router::add_get('/admin/responden', RespondenController::class, 'index');
 Router::add_get('/admin/responden-show', RespondenController::class, 'show');
+Router::add_post('/admin/responden/delete', RespondenController::class, 'delete');
 
 // jawaban
 Router::add_get('/admin/jawaban', JawabanController::class, 'index');

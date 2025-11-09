@@ -16,6 +16,7 @@ class SurveiFormController
             return;
         }
 
+
         // Ambil semua pertanyaan + dimensi
         $items = $model->getItemsWithDimension($survei['id_survei']);
 
@@ -29,25 +30,30 @@ class SurveiFormController
     {
         session_start();
 
-        $idSurvei  = (int)($_POST['id_survei'] ?? 0);
-        $email     = trim($_POST['email'] ?? '');
-        $nama      = trim($_POST['nama'] ?? '');
-        $jurusan   = trim($_POST['jurusan'] ?? '');
-        $umur      = (int)($_POST['umur'] ?? 0);
-        $jk        = $_POST['jenis_kelamin'] ?? '';
-        $pendidikan = trim($_POST['pendidikan'] ?? '');
-        $pekerjaan = trim($_POST['pekerjaan'] ?? '');
+        $idSurvei = (int)($_POST['id_survei'] ?? 0);
 
-        $jawaban   = $_POST['jawaban'] ?? [];
-        $harapan   = $_POST['harapan'] ?? [];
+        // === Data diri minimal ===
+        $nama    = trim($_POST['nama'] ?? '');
+        $umur    = (int)($_POST['umur'] ?? 0);
+        $jk      = $_POST['jenis_kelamin'] ?? '';
+        $asal    = trim($_POST['jurusan'] ?? ''); // gunakan 'jurusan' sbg 'asal'
 
+        // Tidak dipakai tapi aman diset null (jaga skema table yang sudah ada)
+        $email       = null;
+        $pendidikan  = null;
+        $pekerjaan   = null;
+
+        // Kuesioner
+        $jawaban = $_POST['jawaban'] ?? [];
+        $harapan = $_POST['harapan'] ?? [];
+
+        // === Validasi minimal ===
         $errors = [];
         if ($idSurvei <= 0) $errors[] = 'Survei tidak valid.';
-        if ($email === '')  $errors[] = 'Email wajib diisi.';
         if ($nama === '')   $errors[] = 'Nama wajib diisi.';
-        if ($jurusan === '') $errors[] = 'Jurusan/asal wajib diisi.';
         if ($umur <= 0)     $errors[] = 'Umur wajib diisi.';
         if ($jk === '')     $errors[] = 'Jenis kelamin wajib diisi.';
+        if ($asal === '')   $errors[] = 'Asal wajib diisi.';
         if (empty($jawaban) || empty($harapan)) $errors[] = 'Pernyataan belum diisi.';
 
         if ($errors) {
@@ -61,40 +67,34 @@ class SurveiFormController
         try {
             $db->beginTransaction();
 
-            // 1) simpan responden
+            // 1) simpan responden (email/pendidikan/pekerjaan diset NULL)
             $sqlRes = "INSERT INTO responden
-                   (email, nama, jurusan, umur, jenis_kelamin, pendidikan, pekerjaan, dibuat_pada, diperbarui_pada)
-                   VALUES (:email, :nama, :jurusan, :umur, :jk, :pendidikan, :pekerjaan, NOW(), NOW())";
+          (email, nama, jurusan, umur, jenis_kelamin,  dibuat_pada, diperbarui_pada)
+          VALUES (:email, :nama, :jurusan, :umur, :jk, NOW(), NOW())";
             $stRes = $db->prepare($sqlRes);
             $stRes->execute([
-                ':email'      => $email ?: null,
-                ':nama'       => $nama ?: null,
-                ':jurusan'    => $jurusan ?: null,
-                ':umur'       => $umur ?: null,
-                ':jk'         => $jk ?: null,
-                ':pendidikan' => $pendidikan ?: null,
-                ':pekerjaan'  => $pekerjaan ?: null,
+                ':email'      => $email,
+                ':nama'       => $nama,
+                ':jurusan'    => $asal,   // ← asal
+                ':umur'       => $umur,
+                ':jk'         => $jk,
             ]);
             $idResponden = (int)$db->lastInsertId();
 
             // 2) simpan jawaban header
-            $ip  = $_SERVER['REMOTE_ADDR'] ?? null;
-            $ua  = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 300);
-
-            // alamat_ip kolom VARBINARY(16). Pakai INET6_ATON agar aman ipv4/ipv6.
             $sqlJawab = "INSERT INTO jawaban (id_survei, id_responden, waktu_kirim)
                      VALUES (:id_survei, :id_responden, NOW())";
             $stJawab = $db->prepare($sqlJawab);
             $stJawab->execute([
-                ':id_survei'   => $idSurvei,
+                ':id_survei'    => $idSurvei,
                 ':id_responden' => $idResponden,
             ]);
             $idJawaban = (int)$db->lastInsertId();
 
             // 3) simpan detail jawaban
             $stDet = $db->prepare("INSERT INTO detail_jawaban
-                               (id_jawaban, id_pertanyaan, harapan, jawaban)
-                               VALUES (:id_jawaban, :id_pertanyaan, :harapan, :jawaban)");
+          (id_jawaban, id_pertanyaan, harapan, jawaban)
+          VALUES (:id_jawaban, :id_pertanyaan, :harapan, :jawaban)");
 
             foreach ($jawaban as $idPertanyaan => $nilaiJawaban) {
                 $nilaiHarapan = isset($harapan[$idPertanyaan]) ? (int)$harapan[$idPertanyaan] : null;
@@ -111,11 +111,12 @@ class SurveiFormController
             exit;
         } catch (Exception $e) {
             if ($db->inTransaction()) $db->rollBack();
-            $_SESSION['alertError'] = 'Terjadi kesalahan saat menyimpan. Silakan coba lagi.' . $e->getMessage();
+            $_SESSION['alertError'] = 'Terjadi kesalahan saat menyimpan. Silakan coba lagi.';
             header('Location: /webqual/survei');
             return;
         }
     }
+
 
 
     public function thanks()

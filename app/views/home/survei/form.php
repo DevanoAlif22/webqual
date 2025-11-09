@@ -29,12 +29,12 @@
                         <h5 class="fw-semibold mb-3">Data Diri</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label">Email *</label>
-                                <input type="email" name="email" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
                                 <label class="form-label">Nama *</label>
                                 <input type="text" name="nama" class="form-control" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Umur *</label>
+                                <input type="number" name="umur" class="form-control" min="10" max="100" required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Jenis Kelamin *</label>
@@ -45,23 +45,12 @@
                                     <option value="Lainnya">Lainnya</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <label class="form-label">Umur *</label>
-                                <input type="number" name="umur" class="form-control" min="10" max="100" required>
-                            </div>
                             <div class="col-md-6">
-                                <label class="form-label">Jurusan / Asal *</label>
+                                <label class="form-label">Asal *</label>
                                 <input type="text" name="jurusan" class="form-control" required>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Pendidikan (opsional)</label>
-                                <input type="text" name="pendidikan" class="form-control" placeholder="misal: S1 Sistem Informasi">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Pekerjaan (opsional)</label>
-                                <input type="text" name="pekerjaan" class="form-control" placeholder="misal: Mahasiswa / ASN / Swasta">
-                            </div>
                         </div>
+
 
                         <hr class="my-4">
 

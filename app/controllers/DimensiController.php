@@ -4,14 +4,14 @@ require_once __DIR__ . '/../models/Dimensi.php';
 
 class DimensiController
 {
-    // public function __construct()
-    // {
-    //     session_start();
-    //     if (!View::checkAdmin()) {
-    //         header('Location: /webqual/login');
-    //         return;
-    //     }
-    // }
+    public function __construct()
+    {
+        session_start();
+        if (!View::checkAdmin()) {
+            header('Location: /webqual/login');
+            return;
+        }
+    }
 
     public function index()
     {

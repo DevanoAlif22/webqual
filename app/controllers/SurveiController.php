@@ -6,14 +6,14 @@ class SurveiController
 {
     private array $statusAllowed = ['draf', 'berjalan', 'selesai'];
 
-    // public function __construct()
-    // {
-    //     session_start();
-    //     if (!View::checkAdmin()) {
-    //         header('Location: /webqual/login');
-    //         return;
-    //     }
-    // }
+    public function __construct()
+    {
+        session_start();
+        if (!View::checkAdmin()) {
+            header('Location: /webqual/login');
+            return;
+        }
+    }
 
     public function index()
     {

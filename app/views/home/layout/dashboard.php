@@ -379,20 +379,12 @@
 
         <div class="topbar-menu">
             <div class="topbar-user">
-                <div class="topbar-user-avatar">
-                    <?php
-                    session_start();
-                    $adminName = isset($_SESSION['admin']['username']) ? $_SESSION['admin']['username'] : 'Admin';
-                    echo strtoupper(substr($adminName, 0, 1));
-                    ?>
-                </div>
                 <div class="topbar-user-info">
-                    <div class="topbar-user-name"><?= htmlspecialchars($adminName) ?></div>
                     <div class="topbar-user-role">Administrator</div>
                 </div>
             </div>
 
-            <a class="btn-logout" href="/webqual/admin/logout">
+            <a class="btn-logout" href="/webqual/logout">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Keluar</span>
             </a>
@@ -419,10 +411,10 @@
                     <i class="bi bi-ui-checks-grid"></i>
                     <span>Pertanyaan</span>
                 </a>
-                <a class="menu-item" href="/webqual/admin/mapping">
+                <!-- <a class="menu-item" href="/webqual/admin/mapping">
                     <i class="bi bi-link-45deg"></i>
                     <span>Mapping Survei</span>
-                </a>
+                </a> -->
                 <a class="menu-item" href="/webqual/admin/responden">
                     <i class="bi bi-people"></i>
                     <span>Responden</span>
@@ -437,7 +429,7 @@
                 </a>
             </div>
 
-            <div class="menu-section">
+            <!-- <div class="menu-section">
                 <div class="menu-section-title">Pengaturan</div>
                 <a class="menu-item" href="/webqual/admin/pengguna">
                     <i class="bi bi-person-gear"></i>
@@ -447,7 +439,7 @@
                     <i class="bi bi-globe2"></i>
                     <span>Situs</span>
                 </a>
-            </div>
+            </div> -->
         </nav>
     </aside>
 

@@ -156,4 +156,48 @@ class BaseModel
         $st->execute();
         return $st->fetchAll();
     }
+    public function getRingkasanResponden(int $id_survei, int $id_responden): array
+    {
+        $sql = "
+            SELECT 
+                d.nama_dimensi,
+                p.kode_pertanyaan,
+                p.teks_pertanyaan,
+                dj.harapan,
+                dj.jawaban
+            FROM jawaban j
+            INNER JOIN detail_jawaban dj ON dj.id_jawaban = j.id_jawaban
+            INNER JOIN pertanyaan p      ON p.id_pertanyaan = dj.id_pertanyaan
+            INNER JOIN dimensi d         ON d.id_dimensi   = p.id_dimensi
+            WHERE j.id_survei = :s AND j.id_responden = :r
+            ORDER BY p.id_dimensi ASC, p.kode_pertanyaan ASC
+        ";
+        $st = $this->connection->prepare($sql);
+        $st->bindValue(':s', $id_survei, PDO::PARAM_INT);
+        $st->bindValue(':r', $id_responden, PDO::PARAM_INT);
+        $st->execute();
+        return $st->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function attach(int $id_survei, int $id_pertanyaan)
+    {
+        $sqlOrder = "SELECT COALESCE(MAX(urutan_tampil), 0) + 1 AS next_no
+                     FROM survei_pertanyaan
+                     WHERE id_survei = :s";
+        $st = $this->connection->prepare($sqlOrder);
+        $st->execute([':s' => $id_survei]);
+        $next = (int)$st->fetchColumn();
+
+        $sql = "INSERT INTO survei_pertanyaan (id_survei, id_pertanyaan, urutan_tampil)
+                VALUES (:s, :p, :u)";
+        $st2 = $this->connection->prepare($sql);
+        $st2->execute([
+            ':s' => $id_survei,
+            ':p' => $id_pertanyaan,
+            ':u' => $next,
+        ]);
+    }
+    public function getLastInsertId()
+    {
+        return $this->connection->lastInsertId();
+    }
 }
