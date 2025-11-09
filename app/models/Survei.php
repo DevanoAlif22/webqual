@@ -44,26 +44,28 @@ class Survei extends BaseModel
     }
 
     /** Ambil item pertanyaan lengkap + info dimensi untuk 1 survei (buat render form) */
+    // models/Survei.php
     public function getItemsWithDimension($id_survei)
     {
         $sql = "SELECT
-                    p.id_pertanyaan,
-                    p.kode_pertanyaan,
-                    p.teks_pertanyaan,
-                    d.id_dimensi,
-                    d.nama_dimensi,
-                    d.kode_dimensi,
-                    sp.urutan_tampil
-                FROM survei_pertanyaan sp
-                INNER JOIN pertanyaan p ON p.id_pertanyaan = sp.id_pertanyaan
-                INNER JOIN dimensi d    ON d.id_dimensi    = p.id_dimensi
-                WHERE sp.id_survei = :id
-                ORDER BY sp.urutan_tampil ASC";
+                p.id_pertanyaan,
+                p.kode_pertanyaan,
+                p.teks_pertanyaan,
+                d.id_dimensi,
+                d.nama_dimensi,
+                d.kode_dimensi,
+                sp.urutan_tampil
+            FROM survei_pertanyaan sp
+            INNER JOIN pertanyaan p ON p.id_pertanyaan = sp.id_pertanyaan
+            INNER JOIN dimensi d    ON d.id_dimensi    = p.id_dimensi
+            WHERE sp.id_survei = :id
+            ORDER BY d.id_dimensi ASC, sp.urutan_tampil ASC, p.kode_pertanyaan ASC";
         $st  = $this->connection->prepare($sql);
-        $st->bindParam(':id', $id_survei, PDO::PARAM_INT);
+        $st->bindValue(':id', $id_survei, PDO::PARAM_INT);
         $st->execute();
         return $st->fetchAll();
     }
+
 
     /**
      * Ringkasan per dimensi: rata_harapan, rata_jawaban, wqi_unit (0..1)

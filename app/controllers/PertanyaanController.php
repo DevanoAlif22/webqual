@@ -2,17 +2,20 @@
 
 require_once __DIR__ . '/../models/Pertanyaan.php';
 require_once __DIR__ . '/../models/Dimensi.php';
+require_once __DIR__ . '/../models/SurveiPertanyaan.php';
+require_once __DIR__ . '/../models/Survei.php';
+
 
 class PertanyaanController
 {
-    // public function __construct()
-    // {
-    //     session_start();
-    //     if (!View::checkAdmin()) {
-    //         header('Location: /webqual/admin/login');
-    //         return;
-    //     }
-    // }
+    public function __construct()
+    {
+        session_start();
+        if (!View::checkAdmin()) {
+            header('Location: /webqual/admin/login');
+            return;
+        }
+    }
 
     /** List pertanyaan (optional filter by dimensi) */
     public function index()
@@ -54,7 +57,6 @@ class PertanyaanController
         $teks_pertanyaan  = trim($_POST['teks_pertanyaan'] ?? '');
         $aktif            = isset($_POST['aktif']) ? (int)($_POST['aktif'] ? 1 : 0) : 1;
 
-        // Validasi
         $errors = [];
         if ($id_dimensi <= 0)               $errors[] = 'Dimensi wajib dipilih.';
         if ($kode_pertanyaan === '')        $errors[] = 'Kode pertanyaan wajib diisi.';
@@ -63,28 +65,41 @@ class PertanyaanController
 
         if ($errors) {
             $_SESSION['alertError'] = implode('<br>', $errors);
-            header('Location: /webqual/admin/pertanyaan/create');
+            header('Location: /webqual/admin/pertanyaan-create');
             return;
         }
 
         try {
+            // 1️⃣ Simpan pertanyaan baru
             $pertanyaan = new Pertanyaan();
             $pertanyaan->insert([
-                'id_pertanyaan'  => null,
-                'id_dimensi'     => $id_dimensi,
+                'id_pertanyaan'   => null,
+                'id_dimensi'      => $id_dimensi,
                 'kode_pertanyaan' => htmlspecialchars($kode_pertanyaan),
                 'teks_pertanyaan' => $teks_pertanyaan,
-                'aktif'          => $aktif,
-                'dibuat_pada'    => date('Y-m-d H:i:s'),
+                'aktif'           => $aktif,
+                'dibuat_pada'     => date('Y-m-d H:i:s'),
                 'diperbarui_pada' => date('Y-m-d H:i:s'),
             ]);
+
+            $idBaru = (int)$pertanyaan->getLastInsertId();
+
+            // 2️⃣ Ambil survei yang sedang berjalan
+            $surveiModel = new Survei();
+            $surveiBerjalan = $surveiModel->getRunning();
+
+            // 3️⃣ Jika ada survei berjalan, tautkan otomatis dengan urutan_tampil +1
+            if ($surveiBerjalan) {
+                $sp = new SurveiPertanyaan();
+                $sp->attach($surveiBerjalan['id_survei'], $idBaru); // otomatis urutan +1
+            }
 
             $_SESSION['alertSuccess'] = 'Berhasil menambahkan pertanyaan!';
             header('Location: /webqual/admin/pertanyaan');
             exit();
         } catch (Exception $e) {
             $_SESSION['alertError'] = 'Gagal menambahkan pertanyaan! ' . $e->getMessage();
-            echo json_encode(['status' => 'error']);
+            header('Location: /webqual/admin/pertanyaan-create');
             return;
         }
     }

@@ -3,6 +3,7 @@ require_once __DIR__ . '/../models/Dimensi.php';
 require_once __DIR__ . '/../models/Pertanyaan.php';
 require_once __DIR__ . '/../models/Responden.php';
 require_once __DIR__ . '/../models/DetailJawaban.php';
+require_once __DIR__ . '/../models/Survei.php';
 
 class JawabanController
 {
@@ -18,7 +19,11 @@ class JawabanController
     public function index()
     {
         // $id_survei = (int)($_GET['id_survei'] ?? 0);
-        $id_survei = 1;
+        // $id_survei = 4;
+
+        $surveiModel = new Survei();
+        $surveiBerjalan = $surveiModel->getRunning();
+        $id_survei = $surveiBerjalan ? (int)$surveiBerjalan['id_survei'] : 0;
         if (!$id_survei) {
             $_SESSION['alertError'] = 'Pilih survei terlebih dahulu.';
             header('Location: /webqual/admin/survei');

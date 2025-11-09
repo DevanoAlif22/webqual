@@ -352,10 +352,10 @@ function badgeStatus($s)
                 Data Survei
             </h2>
         </div>
-        <a href="/webqual/admin/survei-create" class="btn btn-add-survei">
+        <!-- <a href="/webqual/admin/survei-create" class="btn btn-add-survei">
             <i class="bi bi-plus-circle"></i>
             Tambah Survei
-        </a>
+        </a> -->
     </div>
 
     <div class="card-modern">
@@ -368,7 +368,7 @@ function badgeStatus($s)
                 </div>
                 <?php unset($_SESSION['alertSuccess']); ?>
             <?php endif; ?>
-            
+
             <?php if (isset($_SESSION['alertError'])): ?>
                 <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
                     <i class="bi bi-exclamation-triangle me-2"></i>
@@ -402,7 +402,8 @@ function badgeStatus($s)
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no = 1; foreach ($surveis as $s): ?>
+                            <?php $no = 1;
+                            foreach ($surveis as $s): ?>
                                 <?php
                                 $periode = date('d M Y', strtotime($s['tanggal_mulai'])) . ' - ' . date('d M Y', strtotime($s['tanggal_selesai']));
                                 $respon = $totalResponPerSurvei[$s['id_survei']] ?? 0;
@@ -428,31 +429,26 @@ function badgeStatus($s)
                                     </td>
                                     <td>
                                         <div class="action-buttons">
-                                            <a href="/webqual/admin/survei-show?id_survei=<?= $s['id_survei'] ?>" 
-                                               class="btn btn-action btn-view" 
-                                               title="Lihat Detail">
+                                            <a href="/webqual/admin/survei-show?id_survei=<?= $s['id_survei'] ?>"
+                                                class="btn btn-action btn-view"
+                                                title="Lihat Detail">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="/webqual/admin/survei-edit?id_survei=<?= $s['id_survei'] ?>" 
-                                               class="btn btn-action btn-edit"
-                                               title="Edit">
+                                            <a href="/webqual/admin/survei-edit?id_survei=<?= $s['id_survei'] ?>"
+                                                class="btn btn-action btn-edit"
+                                                title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <a href="/webqual/admin/mapping?id_survei=<?= $s['id_survei'] ?>" 
-                                               class="btn btn-action btn-link"
-                                               title="Mapping">
-                                                <i class="bi bi-link-45deg"></i>
-                                            </a>
-                                            <a href="/webqual/admin/hasil?id_survei=<?= $s['id_survei'] ?>" 
-                                               class="btn btn-action btn-chart"
-                                               title="Hasil">
+                                            <a href="/webqual/admin/hasil?id_survei=<?= $s['id_survei'] ?>"
+                                                class="btn btn-action btn-chart"
+                                                title="Hasil">
                                                 <i class="bi bi-graph-up"></i>
                                             </a>
-                                            <button onclick="deleteSurvei('<?= (int)$s['id_survei'] ?>')" 
-                                                    class="btn btn-action btn-delete"
-                                                    title="Hapus">
+                                            <!-- <button onclick="deleteSurvei('<?= (int)$s['id_survei'] ?>')"
+                                                class="btn btn-action btn-delete"
+                                                title="Hapus">
                                                 <i class="bi bi-trash"></i>
-                                            </button>
+                                            </button> -->
                                         </div>
                                     </td>
                                 </tr>
@@ -460,7 +456,7 @@ function badgeStatus($s)
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="pagination-wrapper">
                     <div class="pagination-info">
                         Menampilkan <strong id="showingStart">1</strong> - <strong id="showingEnd">5</strong> dari <strong id="totalData"><?= count($surveis); ?></strong> data
@@ -503,14 +499,14 @@ function badgeStatus($s)
         const tbody = document.querySelector('.table-modern tbody');
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        
+
         // Hide all rows
         allRows.forEach(row => row.style.display = 'none');
-        
+
         // Show only rows for current page
         const pageRows = allRows.slice(start, end);
         pageRows.forEach(row => row.style.display = '');
-        
+
         // Update row numbers
         pageRows.forEach((row, index) => {
             const numberCell = row.querySelector('.survei-id');
@@ -518,27 +514,27 @@ function badgeStatus($s)
                 numberCell.textContent = start + index + 1;
             }
         });
-        
+
         // Update pagination info
         document.getElementById('showingStart').textContent = start + 1;
         document.getElementById('showingEnd').textContent = Math.min(end, allRows.length);
         document.getElementById('totalData').textContent = allRows.length;
-        
+
         // Update buttons
         updatePaginationButtons();
     }
 
     function updatePaginationButtons() {
         const totalPages = Math.ceil(allRows.length / itemsPerPage);
-        
+
         // Update prev/next buttons
         document.getElementById('prevBtn').disabled = currentPage === 1;
         document.getElementById('nextBtn').disabled = currentPage === totalPages;
-        
+
         // Generate page number buttons
         const pageNumbersDiv = document.getElementById('pageNumbers');
         pageNumbersDiv.innerHTML = '';
-        
+
         for (let i = 1; i <= totalPages; i++) {
             const btn = document.createElement('button');
             btn.className = 'pagination-btn page-number-btn' + (i === currentPage ? ' active' : '');
@@ -551,7 +547,7 @@ function badgeStatus($s)
     function changePage(direction) {
         const totalPages = Math.ceil(allRows.length / itemsPerPage);
         const newPage = currentPage + direction;
-        
+
         if (newPage >= 1 && newPage <= totalPages) {
             showPage(newPage);
         }

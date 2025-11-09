@@ -6,15 +6,20 @@ class HasilWqi extends BaseModel
         parent::__construct('hasil_wqi');
     }
 
-    /** Upsert sederhana berdasarkan (id_survei, id_dimensi) unik */
+    /**
+     * Upsert sederhana berdasarkan (id_survei, id_dimensi).
+     * Catatan:
+     * - id_dimensi = NULL untuk baris TOTAL (keseluruhan).
+     * - Karena UNIQUE (id_survei,id_dimensi) tidak bisa membatasi NULL di MariaDB/MySQL,
+     *   kita tetap cek manual via getExisting().
+     */
     public function upsert(array $data)
     {
-        // Pastikan ada unique key (id_survei, id_dimensi) di DB untuk aman, atau lakukan manual cek
-        $cek = $this->getExisting($data['id_survei'], $data['id_dimensi']);
+        $cek = $this->getExisting((int)$data['id_survei'], $data['id_dimensi'] === null ? null : (int)$data['id_dimensi']);
         if ($cek) {
-            $this->update($data, 'id_hasil', $cek['id_hasil']);
+            $this->updateExplicit($data, 'id_hasil', (int)$cek['id_hasil']);
         } else {
-            $this->insert($data);
+            $this->insertExplicit($data);
         }
     }
 
@@ -32,5 +37,64 @@ class HasilWqi extends BaseModel
     public function listBySurvei(int $id_survei)
     {
         return $this->getAllById('id_survei', $id_survei);
+    }
+
+    /**
+     * Insert dengan column list eksplisit (lebih aman daripada BaseModel::insert()).
+     * Wajib isi semua kolom non-nullable (kecuali AUTO_INCREMENT & default).
+     *
+     * Kolom: id_hasil (AI), id_survei, id_dimensi(NULLable), rata_harapan, rata_jawaban,
+     *        skor_maksimal, skor_tertimbang, wqi, interpretasi, dibuat_pada (default)
+     */
+    public function insertExplicit(array $data): void
+    {
+        $cols = [
+            'id_survei',
+            'id_dimensi',
+            'rata_harapan',
+            'rata_jawaban',
+            'skor_maksimal',
+            'skor_tertimbang',
+            'wqi',
+            'interpretasi'
+        ];
+        $names = implode(',', $cols);
+        $binds = implode(',', array_map(fn($c) => ":$c", $cols));
+
+        $sql = "INSERT INTO {$this->table} ($names) VALUES ($binds)";
+        $st  = $this->connection->prepare($sql);
+
+        foreach ($cols as $c) {
+            $paramType = PDO::PARAM_STR;
+            if (in_array($c, ['id_survei', 'id_dimensi'], true)) $paramType = PDO::PARAM_INT;
+            $st->bindValue(":$c", $data[$c] ?? null, $data[$c] === null ? PDO::PARAM_NULL : $paramType);
+        }
+        $st->execute();
+    }
+
+    /** Update eksplisit berdasarkan PK */
+    public function updateExplicit(array $data, string $identifier, int $id): void
+    {
+        $cols = [
+            'id_survei',
+            'id_dimensi',
+            'rata_harapan',
+            'rata_jawaban',
+            'skor_maksimal',
+            'skor_tertimbang',
+            'wqi',
+            'interpretasi'
+        ];
+        $set = implode(',', array_map(fn($c) => "$c=:$c", $cols));
+        $sql = "UPDATE {$this->table} SET $set WHERE $identifier = :id";
+        $st  = $this->connection->prepare($sql);
+
+        foreach ($cols as $c) {
+            $paramType = PDO::PARAM_STR;
+            if (in_array($c, ['id_survei', 'id_dimensi'], true)) $paramType = PDO::PARAM_INT;
+            $st->bindValue(":$c", $data[$c] ?? null, $data[$c] === null ? PDO::PARAM_NULL : $paramType);
+        }
+        $st->bindValue(':id', $id, PDO::PARAM_INT);
+        $st->execute();
     }
 }
